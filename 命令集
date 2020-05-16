@@ -1,0 +1,974 @@
+# 1. linux控制台常用命令
+
+## **1.1 文件/目录/用户/端口** 
+
+### 1.1.1 目录操作
+
+cd /home 进入 '/ home' 目录' 
+cd .. 返回上一级目录 
+cd ../.. 返回上两级目录 
+cd 进入个人的主目录 
+cd ~user1 进入个人的主目录 
+cd - 返回上次所在的目录 
+
+mkdir dir1 创建一个叫做 'dir1' 的目录'
+mkdir dir1 dir2 同时创建两个目录 
+mkdir -p /tmp/dir1/dir2 创建一个目录树
+rm -f file1 删除一个叫做 'file1' 的文件'
+rmdir dir1 删除一个叫做 'dir1' 的空目录' 
+rm -rf dir1 删除一个叫做 'dir1' 的目录并同时删除其内容 
+rm -rf dir1 dir2 同时删除两个目录及它们的内容 
+mv dir1 new_dir 重命名/移动 一个目录 
+
+pwd 显示工作路径 
+
+### 1.1.2 查看目录文件
+
+ls 查看目录中的文件 
+ls -F 查看目录中的文件 
+ls -l 显示文件和目录的详细资料 
+
+ls -lh 以直观的形式查看所有文件大小
+ls -a 显示隐藏文件 
+ls *[0-9]* 显示包含数字的文件名和目录名 
+tree 显示文件和目录由根目录开始的树形结构
+lstree 显示文件和目录由根目录开始的树形结构
+
+### 1.1.3 复制粘贴
+
+Ctrl + Insert 或 用鼠标选中        复制
+Shift + Insert 或 单击鼠标右击   粘贴
+cp file1 file2 复制文件
+cp  -r dir1 dir2 复制目录
+
+### 1.1.4 文件查找
+
+locate filename  查找文件filename   **常用、效率较高**
+find  -name  filename  全局查找filename文件位置
+find / -name filename 全盘搜索filename
+whereis filename 该指令只能用于查找二进制文件、源代码文件和man手册页
+which filename  在环境变量$PATH设置的目录里查找符合条件的文件
+
+### 1.1.5 查看端口
+
+netstat -ntlp   //查看当前所有tcp端口·
+netstat -ntulp |grep 57280   //查看所有57280端口使用情况·
+netstat -an | grep 3306   //查看所有3306端口使用情况·
+netstat -tapen|grep 8000
+lsof -i:8000
+telnet 10.43.139.53 57280  //查看10.43.139.53的57280端口是否通，通的则显示Connected to 10.43.139.53
+
+### 1.1.6 文件操作
+
+#### 1.1.6.1 写文件
+
+echo hello B > tmp.txt  将字符串输出重定向， 当前目录存在tmp.txt，则将tmp.txt内容替换成输出的字符串    tmp.txt内容：hello B
+echo hello C >> tmp.txt  将字符串输出追加重定向，当前目录存在tmp.txt，则将tmp.txt的内容后面追加输出的字符串   tmp.txt内容：hello B hello C
+echo -e "abc\nacd"  输出为（实现换行输出）：
+abc
+acd
+
+#### 1.1.6.2 复制文件
+
+cp file1 file2 复制一个文件
+
+#### 1.1.6.3 使文件生效
+
+source filename 在当前bash环境下读取并执行FileName中的命令
+
+#### 1.1.6.4 建立软链接
+
+ln -s file1 file2  为某一个文件file1在另外一个位置file2建立一个同步的链接
+
+#### 1.1.6.5 建立物理链接
+
+ln file1 lnk1 创建一个指向文件或目录的物理链接 
+
+### 1.1.7 用户管理
+
+#### 1.1.7.1 查看当前用户
+
+whoami
+
+#### 1.1.7.2 切换用户
+
+su - {username}切换到username用户
+
+#### 1.1.7.3 创建用户
+
+useradd username	新建一个用户
+useradd -G gid useradd 指定用户的附加组（一定要存在）
+useradd -c ‘string’ username 指定用户的说明信息
+useradd -s /etc/shell username	指定用户所使用的shell（该用户的shell就为/etc/shell）
+举例：useradd -s /bin/bash -G adm,root -m jhub2
+
+#### 1.1.7.4 更改用户密码
+
+passwd username   更改username的密码
+echo -e "dap1234$\ndap1234$" |passwd jhub2 将jhub2密码更改为dap1234$
+
+#### 1.1.7.5 删除用户
+
+userdel 选项 用户名
+ -r,  把用户的主目录一起删除。
+
+## **1.2 打包和压缩文件** 
+
+bunzip2 file1.bz2 解压一个叫做 'file1.bz2'的文件 
+bzip2 file1 压缩一个叫做 'file1' 的文件 
+gunzip file1.gz 解压一个叫做 'file1.gz'的文件 
+gzip file1 压缩一个叫做 'file1'的文件 
+gzip -9 file1 最大程度压缩 
+rar a file1.rar test_file 创建一个叫做 'file1.rar' 的包 
+rar a file1.rar file1 file2 dir1 同时压缩 'file1', 'file2' 以及目录 'dir1' 
+rar x file1.rar 解压rar包 
+unrar x file1.rar 解压rar包 
+tar -cvf archive.tar file1 创建一个非压缩的 tarball 
+tar -cvf archive.tar file1 file2 dir1 创建一个包含了 'file1', 'file2' 以及 'dir1'的档案文件 
+tar -tf archive.tar 显示一个包中的内容 
+tar -xvf archive.tar 释放一个包 
+tar -xvf archive.tar -C /tmp 将压缩包释放到 /tmp目录下 
+tar -cvfj archive.tar.bz2 dir1 创建一个bzip2格式的压缩包 
+tar -jxvf archive.tar.bz2 解压一个bzip2格式的压缩包 
+tar -cvfz archive.tar.gz dir1 创建一个gzip格式的压缩包 
+**tar -zxvf archive.tar.gz 解压一个gzip格式的压缩包** 
+**tar -zcvf PythonServer.tar.gz .    将当前目录压缩为PythonServer.tar.gz**
+zip file1.zip file1 创建一个zip格式的压缩包 
+zip -r file1.zip file1 file2 dir1 将几个文件和目录同时压缩成一个zip格式的压缩包 
+**unzip file1.zip 解压一个zip格式压缩包** 
+
+ 
+
+## **1.3 文件权限** 
+
+ls -lh 显示权限 
+ls /tmp | pr -T5 -W$COLUMNS 将终端划分成5栏显示 
+chmod ugo+rwx directory1 设置目录的所有人(u)、群组(g)以及其他人(o)以读（r ）、写(w)和执行(x)的权限 
+chmod go-rwx directory1 删除群组(g)与其他人(o)对目录的读写执行权限 
+chown user1 file1 改变一个文件的所有人属性 
+**chown -R user1 directory1 改变一个目录的所有人属性并同时改变改目录下所有文件的属性** 
+chgrp group1 file1 改变文件的群组 
+chown user1:group1 file1 改变一个文件的所有人和群组属性 
+find / -perm -u+s 罗列一个系统中所有使用了SUID控制的文件 
+chmod u+s /bin/file1 设置一个二进制文件的 SUID 位 - 运行该文件的用户也被赋予和所有者同样的权限 
+chmod u-s /bin/file1 禁用一个二进制文件的 SUID位 
+chmod g+s /home/public 设置一个目录的SGID 位 - 类似SUID ，不过这是针对目录的 
+chmod g-s /home/public 禁用一个目录的 SGID 位 
+chmod o+t /home/public 设置一个文件的 STIKY 位 - 只允许合法所有人删除文件 
+chmod o-t /home/public 禁用一个目录的 STIKY 位 
+
+## 1.4 Vim中的命令
+
+Vim中按u撤销上一步操作
+dd  --删除当前行
+ndd  --删除n行数据
+dG  --删除当前后之后的全部行
+
+1.5 linux机器重启
+
+reboot
+
+# 2. git常用命令
+
+## **2.1 提交代码正常流程：**
+
+git add .
+
+git commit -m "add jrehome config"
+
+git pull -r
+
+git push origin HEAD:refs/for/AI-Explorer-dev
+
+ 
+
+## **2.2 二次提交：**
+
+git add .
+
+git commit --amend
+
+git pull -r
+
+git push origin HEAD:refs/for/AI-Explorer-dev
+
+ 
+
+## **2.3 实例：遇到冲突的情况**
+
+A、别人的代码已经submit的情况。
+
+1、git add .
+
+2、git commit -m "***********"
+
+3、git pull --r
+
+（出现冲突，红色框提示冲突的文件。同时提示用户需要先解决这个冲突，然后用git rebase --continue继续）
+
+4、本地intellij解决冲突（冲突前的代码，会同时存在你和远端的代码），可以git status查看你当前处在REBASE的分支下。
+
+5、git add .
+
+6、git rebase --continue
+
+7、git push origin HEAD:refs/for/AI-Explorer-dev
+
+如果你直接是1,2,7三步提交到gerrit上，gerrit上就会出现如下提示冲突：merge conflict
+
+使用第3、4、5、6、7步解决冲突以后，gerrit上的合并冲突字样就会消失，此时就可以submit了。
+
+ 
+
+## **2.4 放弃push的代码**
+
+aband
+
+git reset HEAD~1
+
+ 
+
+## **2.5 本地已有修改，但是又想更新代码**
+
+git stash
+
+git pull -r
+
+git stash pop
+
+ 
+
+## **2.6 只提交修改，不提交新增文件**
+
+git add -u
+
+## 2.7 查看日志
+
+git log
+--pretty=oneline 简化输出信息
+--graph 图形方式显示
+
+# 3. IDEA常用命令
+
+## 3.1 常用命令
+
+**1.** **Alt + Enter**   引入类
+
+**2.** **Ctrl + O**  查看我们继承的类或者接口中的方法，以及我们要实现的方法
+
+**3.** **Ctrl + Alt + b**跳转到抽象方法的实现
+
+**4.** **Alt + Insert**   set/get; 构造方法;  toString; 重写方法
+
+**5.** **Ctrl+Alt+T** 将代码包在一个块中，例如try/catch ;synchronized等
+
+**6.** **iter**  foreach循环
+
+**7.** **itar**  for循环
+
+ 
+
+**8.** **Ctrl+F2**，停止
+
+**9.** **Alt+Shift+F9**，选择 Debug
+
+**10.** **Alt+Shift+F10**，选择 Run
+
+**11.** **Ctrl+Shift+F9**，编译
+
+**12.** **Ctrl+Shift+F10**，运行
+
+**13.** **Ctrl+Shift+F8**，查看断点
+
+**14.** **F8**，步过
+
+**15.** **F7**，步入
+
+**16.** **Shift+F7**，智能步入
+
+**17.** **Shift+F8**，步出
+
+**18.** **Alt+Shift+F8**，强制步过
+
+**19.** **Alt+Shift+F7**，强制步入
+
+**20.** **Alt+F9**，运行至光标处
+
+**21.** **Ctrl+Alt+F9**，强制运行至光标处
+
+**22.** **F9**，恢复程序
+
+**23.** **Alt+F10**，定位到断点
+
+**24.** **Ctrl+F8**，切换行断点
+
+**25.** **Ctrl+F9**，生成项目
+
+ 
+
+**26.** **Ctrl+Alt+Shift+T**，弹出重构菜单
+
+**27.** **Shift+F6**，重命名
+
+**28.** **F6**，移动
+
+**29.** **F5**，复制
+
+**30.** **Alt+Delete**，安全删除
+
+**31.** **Ctrl+Alt+N**，内联
+
+ 
+
+**32.** **Ctrl+X** 删除行
+
+**33.** **Ctrl+D** 复制行
+
+**34.** **Ctrl+/ 或 Ctrl+Shift+/**  注释（// 或者/*...*/ ）
+
+**35.** **Ctrl+H** 显示类结构图
+
+**36.** **Alt+F1** 查找代码所在位置
+
+**37.** **Alt＋F8 **是计算变量值
+
+**38. Ctrl + G** 查找行
+
+## **3.2 IntelliJ IDEA使用技巧**
+
+在使用 InelliJ IDEA 的过程中，通过查找资料以及一些自己的摸索，发现这个众多 Java 程序员喜欢的 IDE 里有许多值得一提的小窍门，如果能熟练的将它们应用于实际开发过程中，相信它会大大节省你的开发时间，而且随之而来的还会有那么一点点成就感：） Try it ！
+
+1 、写代码时用 Alt-Insert （ Code|Generate… ）可以创建类里面任何字段的 getter 与 setter 方法。 
+<?xml:namespace prefix = v ns = "urn:schemas-microsoft-com:vml" />
+
+2 、右键点击断点标记（在文本的左边栏里）激活速查菜单，你可以快速设置 enable/disable 断点或者条件它的属性。
+
+3 、 CodeCompletion （代码完成）属性里的一个特殊的变量是，激活 Ctrl-Alt-Space 可以完成在或不在当前文件里的类名。如果类没有引入则 import 标志会自动创建。
+
+4 、使用 Ctrl-Shift-V 快捷键可以将最近使用的剪贴板内容选择插入到文本。使用时系统会弹出一个含有剪贴内容的对话框，从中你可以选择你要粘贴的部分。
+
+5 、利用 CodeCompletion （代码完成）属性可以快速地在代码中完成各种不同地语句，方法是先键入一个类名地前几个字母然后再用 Ctrl-Space 完成全称。如果有多个选项，它们会列在速查列表里。
+
+6 、用 Ctrl-/ 与 Ctrl-Shift-/ 来注释 / 反注释代码行与代码块。 
+-/ 用单行注释标记（“ //… ”）来注释 / 反注释当前行或者选择地代码块。而 Ctrl-Shift-/ 则可以用块注释标记（“ /*…*/ ”）把所选块包围起来。要反注释一个代码块就在块中任何一个地方按 Ctrl-Shift-/ 即可。
+
+7 、按 Alt-Q （ View|Context Info ）可以不需要移动代码就能查看当前方法地声明。连续按两次会显示当前所编辑的类名。
+
+8 、使用 Refactor|Copy Class… 可以创建一个所选择的类的“副本”。这一点很有用，比如，在你想要创建一个大部分内容都和已存在类相同的类时。
+
+9 、在编辑器里 Ctrl-D 可以复制选择的块或者没有所选块是的当前行。
+
+10 、 Ctrl-W （选择字）在编辑器里的功能是先选择脱字符处的单词，然后选择源代码的扩展区域。举例来说，先选择一个方法名，然后是调用这个方法的表达式，然后是整个语句，然后包容块，等等。
+
+11 、如果你不想让指示事件细节的“亮球”图标在编辑器上显示，通过按 Alt-Enter 组合键打开所有事件列表然后用鼠标点击它就可以把这个事件文本附件的亮球置成非活动状态。 
+这样以后就不会有指示特殊事件的亮球出现了，但是你仍然可以用 Alt-Enter 快捷键使用它。
+
+12 、在使用 CodeCompletion 时，可以用逗点（ . ）字符，逗号（，）分号（；），空格和其它字符输入弹出列表里的当前高亮部分。选择的名字会随着输入的字符自动输入到编辑器里。
+
+13 、在任何工具窗口里使用 Escape 键都可以把焦点移到编辑器上。 
+Shift-Escape 不仅可以把焦点移到编辑器上而且还可以隐藏当前（或最后活动的）工具窗口。 
+F12 键把焦点从编辑器移到最近使用的工具窗口。
+
+14 、在调试程序时查看任何表达式值的一个容易的方法就是在编辑器中选择文本（可以按几次 Ctrl-W 组合键更有效地执行这个操作）然后按 Alt-F8 。
+
+15 、要打开编辑器脱字符处使用的类或者方法 Java 文档的浏览器，就按 Shift-F1 （右键菜单的 External JavaDoc ）。 
+要使用这个功能须要把加入浏览器的路径，在“ General ”选项中设置（ Options | IDE Settings ），另外还要把创建的 Java 文档加入到工程中（ File | Project Properties ）。
+
+16 、用 Ctrl-F12 （ View | File Structure Popup ）键你可以在当前编辑的文件中快速导航。 这时它会显示当前类的成员列表。选中一个要导航的元素然后按 Enter 键或 F4 键。要轻松地定位到列表中的一个条目，只需键入它的名字即可。
+
+17 、在代码中把光标置于标记符或者它的检查点上再按 Alt-F7 （右键菜单中的 Find Usages… ）会很快地查找到在整个工程中使用地某一个类、方法或者变量的位置。
+
+18 、按 Ctrl-N （ Go to | Class… ）再键入类的名字可以快速地在编辑器里打开任何一个类。从显示出来的下拉列表里选择类。 
+同样的方法你可以通过使用 Ctrl-Shift-N （ Go to | File… ）打开工程中的非 Java 文件。
+
+19 、要导航代码中一些地方使用到的类、方法或者变量的声明，把光标放在查看项上再按 Ctrl-B 即可。也可以通过按 Ctrl 键的同时在查看点上单击鼠标键调转到声明处。
+
+20 、把光标放到查看点上再按 Ctrl-Alt-B 可以导航到一个抽象方法的实现代码。
+
+21 、要看一个所选择的类的继承层次，按 Ctrl-H （ Browse Type Hierarchy ）即可。也可以激活编辑器中的继承关系视图查看当前编辑类的继承关系。22 、使用 Ctrl-Shift-F7 （ Search | Highlight Usages in File ）可以快速高亮显示当前文件中某一变量的使用地方。按 Escape 清除高亮显示。
+
+23 、用 Alt-F3 （ Search | Incremental Search ）在编辑器中实现快速查查找功能。 
+在“ Search for: ”提示工具里输入字符，使用箭头键朝前和朝后搜索。按 Escape 退出。
+
+24 、按 Ctrl-J 组合键来执行一些你记不起来的 Live Template 缩写。比如，键“ it ”然后按 Ctrl-J 看看有什么发生。
+
+25 、 Introduce Variable 整合帮助你简化代码中复杂的声明。举个例子，在下面的代码片断里，在代码中选择一个表达式：然后按 Ctrl-Alt-V 。
+
+26 、 Ctrl-Shift-J 快捷键把两行合成一行并把不必要的空格去掉以匹配你的代码格式。
+
+27 、 Ctrl-Shift-Backspace （ Go to | Last Edit Location ）让你调转到代码中所做改变的最后一个地方。 
+多按几次 Ctrl-Shift-Backspace 查看更深的修改历史。
+
+28 、用 Tools | Reformat Code… 根据你的代码样式参考（查看 Options | IDE Setting | Code Style ）格式化代码。 
+使用 Tools | Optimize Imports… 可以根据设置（查看 Options | IDE Setting | Code Style | Imports ）自动“优化” imports （清除无用的 imports 等）。
+
+29 、使用 IDEA 的 Live Templates | Live Templates 让你在眨眼间创建许多典型代码。比如，在一个方法里键入。再按 Tab 键看有什么事情发生了。 
+用 Tab 键在不同的模板域内移动。查看 Options | Live Templates 获取更多的细节。
+
+30 、要查看一个文件中修改的本地历史，激活右键菜单里的 Local VCS | Show History… 。也许你可以导航不同的文件版本，看看它们的不同之处再回滚到以前的任何一个版本吧。 使用同样的右键菜单条目还可以看到一个目录里修改的历史。有了这个特性你就不会丢失任何代码了。
+
+31 、如果要了解主菜单里每一个条目的用途，把鼠标指针移到菜单条目上再应用程序框架的底部的状态栏里就会显示它们的一些简短描述，也许会对你有帮助。
+
+32 、要在编辑器里显示方法间的分隔线，打开 Options | IDE Settings | Editor ，选中“ Show method separators ”检查盒（ checkbox ）。
+
+33 、用 Alt-Up 和 Alt-Down 键可以在编辑器里不同的方法之间快速移动。
+
+34 、用 F2/Shift-F2 键在高亮显示的语法错误间跳转。用 Ctrl-Alt-Down/Ctrl-Alt-Up 快捷键则可以在编译器错误信息或者查找操作结果间跳转。
+
+35 、通过按 Ctrl-O （ Code | Override Methods… ）可以很容易地重载基本类地方法。要完成当前类 implements 的（或者抽象基本类的）接口的方法，就使用 Ctrl-I （ Code | Implement Methods… ）。
+
+36 、如果光标置于一个方法调用的括号间，按 Ctrl-P 会显示一个可用参数的列表。
+
+37 、要快速查看编辑器脱字符处使用的类或方法的 Java 文档，按 Ctrl-Q （在弹出菜单的 Show Quick JavaDoc 里）即可。
+
+38 、像 Ctrl-Q （ Show Quick JavaDoc 显示简洁 Java 文档）， Ctrl-P （ Show Parameter Info 显示参数信息）， Ctrl-B （ Go to Declaration 跳转到声明）， Shift-F1 （ External JavaDoc 外部 Java 文档）以及其它一些快捷键不仅可以在编辑器里使用，也可以应用在代码完成右键列表里。
+
+39 、 Ctrl-E （ View | Recent Files ）弹出最近访问的文件右键列表。选中文件按 Enter 键打开。
+
+40 、在 IDEA 中可以很容易地对你的类，方法以及变量进行重命名并在所有使用到它们的地方自动更正。试一下，把编辑器脱字符置于任何一个变量名字上然后按 Shift-F6 （ Refactor | Rename… ）。在对话框里键入要显示地新名字再按 Enter 。你会浏览到使用这个变量地所有地方然后按“ Do Refactor ”按钮结束重命名操作。
+
+41 、要在任何视图（ Project View 工程视图， Structure View 结构视图或者其它视图）里快速选择当前编辑地部分（类，文件，方法或者字段），按 Alt-F1 （ View | Select in… ）。
+
+42 、在“ new ”字符后实例化一个已知类型对象时也许你会用到 SmartType 代码完成这个特性。比如，键入再按 Ctrl-Shift-Space ：
+
+43 、通过使用 SmartType 代码完成，在 IDEA 中创建接口的整个匿名 implementation 也是非常容易的，比如，对于一些 listener （监听器），可以键入 
+Component component; 
+component.addMouseListener( 
+  new <caret is here>  
+);
+
+然后再按 Ctrl-Shift-Space 看看有什么发生了。
+
+44 、在你需要设置一个已知类型的表达式的值时用 SmartType 代码完成也很有帮助。比如，键入 
+String s = ( <caret is here>  
+
+再按 Ctrl-Shift-Space 看看会有什么出现。
+
+45 、在所有视图里都提供了速查功能：在树里只需键入字符就可以快速定位到一个条目。
+
+46 、当你想用代码片断捕捉异常时，在编辑器里选中这个片断，按 Ctrl-Alt-T （ Code | Surround with… ）然后选择“ try/catch ”。它会自动产生代码片断中抛出的所有异常的捕捉块。在 Options | File Templates | Code tab 中你还可以自己定制产生捕捉块的模板。 用列表中的其它项可以包围别的一些结构。
+
+47 、在使用代码完成时，用 Tab 键可以输入弹出列表里的高亮显示部分。 不像用 Enter 键接受输入，这个选中的名字会覆盖掉脱字符右边名字的其它部分。这一点在用一个方法或者变量名替换另一个时特别有用。
+
+48 、在声明一个变量时代码完成特性会给你显示一个建议名。比如，开始键入“ private FileOutputStream ”然后按 Ctrl-Space 在 Options | IDE Setting | Code Style 中还可以为本地变量，参数，实例及静态字段定制名字。
+
+# 4. Docker常用命令
+
+## 4.1 常用命令
+
+### 1、 创建镜像
+
+docker build -t aie/liwei:1.0 .   
+
+-t : 参数用来指定镜像的命名空间、仓库名及TAG
+-f : 明确指定Dockerfile，例如 /path/to/Dockerfile
+
+### 2、 Dockerfile中一般要加下面两句
+
+RUN sed -i s/archive.ubuntu.com/mirrors.zte.com.cn/g /etc/apt/sources.list
+RUN apt-get update && apt-get install -y --no-install-recommends vim
+
+### 3、 查看Dockerfile
+
+cat Dockerfile
+
+### 4、 编辑Dockerfile
+
+vim Dockerfile 
+
+### 5、 查看images
+
+docker images|grep aie   其中aie指的是仓库
+
+### 6、 导入镜像
+
+docker load < test.tar
+test.tar : 需要导入的镜像包名
+
+### 7、 导出镜像
+
+docker save aie/liwei:1.0 > test1.tar
+
+test1.tar : 镜像导出为该名称
+
+docker save aie/debian_python:1.0|gzip> aie_debian_python.tar.gz
+
+### 8、 删除镜像
+
+docker rmi image_name
+
+### 9、 查看正在运行的容器
+
+docker ps
+
+### 10、查看所有容器
+
+docker ps -a
+
+- **-a :**显示所有的容器，包括未运行的。
+- **-f :**根据条件过滤显示的内容。
+- **--format :**指定返回值的模板文件。
+- **-l :**显示最近创建的容器。
+- **-n :**列出最近创建的n个容器。
+- **--no-trunc :**不截断输出。
+- **-q :**静默模式，只显示容器编号。
+- **-s :**显示总的文件大小。
+
+### 11、创建容器
+
+例1 ： docker run -d --name test1107 aie/liwei:1.0
+
+例2 ： docker run --name daemon_while -d ubuntu /bin/sh -c "while true; do echo hello
+world; sleep 1; done"
+
+例3：  docker run -ti --name test1107 aie/liwei:1.0  /bin/bash
+
+-i : 打开标准输入（STDIN）
+
+-d : 后台运行容器，并返回容器ID
+
+-t : 为容器建立一个命令行终端
+--name : 为容器指定一个名字（可选项）
+
+-P:随机端口映射，容器内部端口**随机**映射到主机的高端口
+
+-p: 指定端口映射，格式为：**主机(宿主)端口:容器端口**
+
+-h "mars":  指定容器的hostname
+
+-e username="ritchie": 设置环境变量
+
+--env-file=[]: 从指定文件读入环境变量
+
+-m :设置容器使用内存最大值
+
+--volume , -v:绑定一个卷
+
+--link=[]: 添加链接到另一个容器
+
+-net="bridge":指定容器的网络连接类型，支持 bridge/host/none/container: 四种类型
+
+--expose=[]: 开放一个端口或一组端口
+
+liwei:1.0 : 表示使用liwei:1.0这个镜像去创建容器
+
+### 12、进入容器
+
+docker exec -it aie /bin/bash
+
+ **aie**：表示容器名
+
+**/bin/bash**：表示使用bash类型的shell
+
+如果使用 -d 参数可以在后台执行命令，不用进入shell，例如：
+
+docker exec -d daemon_dave touch /etc/new_config_file
+
+### 13 、退出容器
+
+Ctrl+P+Q 或者 exit
+
+### 14、启动容器
+
+docker start daemon_dave 
+
+### 15、终止容器
+
+docker stop daemon_dave
+
+### 16、删除容器
+
+docker rm daemon_dave
+
+### 17、镜像重命名
+
+docker tag af9ef71035c9 debian:jessie
+
+### 18、查看容器详细信息
+
+docker inspect container_name
+
+### 19、容器内端口设置
+
+假如某应用A需要端口8000，应用B需要端口9000，则需要同时EXPOSE 8000， EXPOSE  9000，在建立容器时使用**run**命令中的 **”-p“** 参数进行端口映射，之后就可以使用所使用的机器的 **ip + 端口** 访问服务了。
+
+### 20、容器、主机互相拷贝文件
+
+将主机./file目录拷贝到容器30026605dcfe的/home/user目录下:
+
+docker cp /file 30026605dcfe:/home/user
+
+
+
+将容器30026605dcfe的/home/user/file目录拷贝到主机的/tmp目录中:
+
+docker cp  30026605dcfe:/home/user/RS-MapReduce  /tmp/
+
+### 21、外网构建Docker镜像
+
+[http://47.103.23.104:3000/wetty/](javascript:void(0);)
+
+先用 codekata:dap1234$ 登录，再su - root
+
+密码也是dap1234$
+
+**此外还有一种方式：阿里云容器镜像服务，可以直接跟github连接，更为方便**
+
+### 22、查看容器日志及删除容器日志
+
+docker logs notebook 查看日志
+
+docker inspect --format='{{.LogPath}}' notebook 查看日志路径
+
+echo > 路径     清空日志
+
+### 23、串联CMD命令
+
+CMD [ "npm", "start", "node", "./server/server.js" ]
+
+### 24、重启docker
+
+systemctl daemon-reload
+
+systemctl restart docker
+
+### 25、导出requirements
+
+pip freeze > requirements.txt   依赖库会导到于requirements.txt
+
+pip install -r requirements     从requirements.txt安装依赖库
+
+## 4.2 连接外网
+
+### 1、 终端连外网命令
+
+ssh -R 2222:proxyhk.zte.com.cn:80 root@10.43.139.53
+
+source proxy.sh
+
+后面的ip为需要联外网的环境
+
+### 2、 Dockerfile
+
+![Dockerfile](C:\Users\10265089\Desktop\Dockerfile.png)
+
+ [深入理解Dockerfile命令](https://github.com/qianlei90/Blog/issues/35)
+
+## 4.3 安装ssh
+
+`RUN apt-get install -y openssh-server && \
+    mkdir /var/run/sshd && \
+    echo 'root:root' |chpasswd && \
+    sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config && \
+    sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config && \
+    mkdir /root/.ssh`
+
+启动ssh    `CMD ["/usr/sbin/sshd", "-D"]`
+
+## 4.4  设定时间
+
+`RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime`
+`RUN echo 'Asia/Shanghai' >/etc/timezone`
+
+## 4.5 设定中文编码
+
+`RUN apt-get -y install locales`
+`RUN echo "export LANG=zh_CN.UTF-8">> /root/.bashrc && \
+    echo "export LANGUAGE=zh_CN.UTF-8">> /root/.bashrc && \
+    echo "export LC_ALL=zh_CN.UTF-8" >> /root/.bashrc &&\
+    echo 'LANGUAGE=zh_CN.UTF-8' > /etc/locale.conf && \
+    echo 'LC_ALL=zh_CN.UTF-8' >> /etc/locale.conf && \
+    echo 'LANG=zh_CN.UTF-8' >> /etc/locale.conf && \
+    echo 'zh_CN.UTF-8 UTF-8' > /etc/locale.gen && \
+    locale-gen`
+
+## 4.6 更改镜像源
+
+### 4.6.1 debian
+
+`RUN sed -i s/deb.debian.org/mirrors.zte.com.cn/g /etc/apt/sources.list && \
+    sed -i s/security.debian.org/mirrors.zte.com.cn/g /etc/apt/sources.list`
+
+### 4.6.2 ubuntu
+
+`RUN sed -i s/archive.ubuntu.com/mirrors.zte.com.cn/g /etc/apt/sources.list && \
+         sed -i s/security.ubuntu.com/mirrors.zte.com.cn/g /etc/apt/sources.list`
+
+### 4.6.3 alpine
+
+`RUN echo "http://mirrors.zte.com.cn/alpine/v3.8/main" > /etc/apk/repositories && \ 
+    echo "http://mirrors.zte.com.cn/alpine/v3.8/community" >> /etc/apk/repositories`
+
+### 4.6.4 aliyun
+
+`RUN . /etc/os-release && \
+    echo "deb http://mirrors.aliyun.com/debian/ buster main non-free contrib \
+    deb-src http://mirrors.aliyun.com/debian/ buster main non-free contrib \
+    deb http://mirrors.aliyun.com/debian-security buster/updates main \
+    deb-src http://mirrors.aliyun.com/debian-security buster/updates main \
+    deb http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib \
+    deb-src http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib \
+    deb http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib \
+    deb-src http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib" > /etc/apt/sources.list`
+
+## 4.7 更改pip源
+
+### 4.7.1 zte
+
+ `RUN mkdir -p /root/.pip && \
+    echo "[global]\n\
+    index-url = http://mirrors.zte.com.cn/pypi/simple\n\ --trusted-host mirrors.zte.com.cn" > /root/.pip/pip.conf`
+
+### 4.7.2 aliyun
+
+ `RUN mkdir -p /root/.pip && \
+    echo "[global]\n\
+    index-url = https://mirrors.aliyun.com/pypi/simple/" > /root/.pip/pip.conf`
+
+# 5. Typora命令
+
+## 5.1 常用命令
+
+#### 1、标题
+
+使用简单的 ctrl+数字键(1,2,3,4,5,6)就可以快速完成各种级别的标题
+
+#### 2、下划线
+
+ctrl + u
+
+#### 3、删除线
+
+alt + shift + 5
+
+#### 4、字体加粗
+
+ctrl + b
+
+#### 5、字体倾斜
+
+ctrl + i
+
+#### 6、无序列表
+
+space + enter
+
+#### 7、有序列表
+
+数字键 + space + enter
+
+#### 8、引用
+
+space + enter 或者 ctrl + shift + q
+
+#### 9、插入链接
+
+ctrl + k
+
+#### 10、插入图片
+
+本地直接拖拉图片到 md 文件 或者配合 MPic完成图片上传图床并复制链接到 md 文件（推荐）或者 ctrl + shift +i
+
+#### 11、代码块
+
+ctrl + shift + f，支持 java，python，groovy 等 绝大多数编程语言
+
+#### 12、文章跳转
+
+ctrl + home 跳转至文章开头，ctrl + end 跳转至文章末尾，这个就不再演示了
+
+#### 13、选中英文单词/中文
+
+ctrl + d 或者 ctrl + shift + left/right 左右进行文本选中
+
+#### 14、英文错误提示并自动修改
+
+#### 15、按行选中
+
+ctrl + l
+
+#### 16、快速搜索
+
+ctrl + f
+
+(支持区分英文大小写和整个单词搜索，也支持中文搜索)
+
+#### 17、替换
+
+ctrl + h
+
+#### 18、插入表格
+
+ctrl + t
+
+#### 19、快速打开笔记
+
+ctrl + p
+
+#### 20、toc 快速生成目录
+
+[toc] + enter
+
+#### 21、着重关键字
+
+ctrl + shift + 反引号键（tab 键上面那个键）
+
+#### 22、表情符号
+
+英文状态下的引号，输入字母自动显示表情符号
+
+还有一种方式，使用输入法的快捷键，这里我使用的是微软输入法 ctrl + shift + b
+
+#### 23、新建文件
+
+ctrl + n，这个就不再演示了
+
+#### 24、显示和隐藏侧边栏
+
+ctrl + shift + l
+
+#### 25、全屏切换
+
+F11 这个就不再演示了
+
+#### 26、分割线
+
+--- + enter，这个也不再演示
+
+#### 27、高亮显示
+
+==文字==，这个也不再演示
+
+#### 28、段落快捷键
+
+ctrl + 0
+
+#### 29、Enter表示换双行，Shift+Enter表示换单行
+
+# 6. Hadoop相关命令
+
+#### **6.1、查看文件列表**
+
+hadoop fs -ls /zaip-datasets 查看zaip-datasets下面的文件列表
+
+#### **6.2、上传本地文件到hdfs**
+
+hdfs dfs -copyFromLocal /local/data /hdfs/data  将本地文件上传到 hdfs 上（原路径只能是一个文件） 
+
+hdfs dfs -put /tmp/ /hdfs/   和 copyFromLocal 区别是，put 原路径可以是文件夹等 
+
+#### **6.3、 查看根目录文件** 
+
+hadoop fs -ls / 
+
+#### **6.4、查看文档，与 -text 一样** 
+
+hadoop fs -cat /tmp/a.txt 
+
+#### **6.5、创建目录dir** 
+
+hadoop fs -mkdir dir：
+
+#### **6.6、删除目录**
+
+dirhadoop fs -rmr dir
+
+# 7. 标注相关用户权限
+
+dev_user2 项目标注经理
+
+dev_user4 标注员
+
+dev_user5 审核员
+
+# 8. Shell脚本编写
+
+### 8.1、sed命令
+
+将
+
+`user_url = 'http://10.43.147.142:8000/hub/api/users/' + username`
+
+替换为
+
+`user_url = 'http://10.43.139.49:8000/hub/api/users/' + username`
+
+使用
+
+`sed -i 's@http://.*:8000@http://10.43.139.49:8000@g' /docker-images/1.txt`   其中/docker-images/1.tx为文件名， -i表示改变原文件
+
+# 9、k8s
+
+### 9.1、查看集群信息
+
+kubectl cluster-info 
+
+### 9.2、查看pod日志
+
+kubectl logs podname
+
+### 9.3、以交互模式进入容器执行命令
+
+kubectl exec -it [podname] bash 
+
+### 9.4、查看集群中的节点
+
+kubectl get nodes 
+
+### 9.5、创建Deployment控制器对象
+
+直接命令式操作 : kubectl run nginx-deploy --image=nginx:1.12 --replicas=2  
+
+配置文件式操作: kubectl create -f nginx-deploy.yaml  或者kubectl apply -f nginx-deploy.yaml
+
+*注：kubectl create 只能创建，kubectl apply 可以创建和更新*
+
+### 9.6、创建Service资源对象
+
+直接命令式操作 : kubectl expose deployment/nginx-deploy --name=nginx-svc --port=80
+
+为名为nginx-deploy的deployment创建service，service名为nginx-svc，端口为80
+
+配置文件式操作:  kubectl create -f nginx-svc.yaml 或者 kubectl apply -f nginx-svc.yaml 
+
+### 9.7、 查看资源对象的详细信息
+
+kubectl describe pod podname
+
+### 9.8、容器中执行命令
+
+kubectl exec aiestandalone-5b8f798f7b-5b5n6 -n default -- ps 
+
+-n参数表示指定namespace为default
+
+### 9.9、删除资源对象
+
+kubectl delete services nginx-svc 删除service对象，不会重建
+
+kubectl delete pod podname 删除pod对象，会重建
+
+klubectl delete deployment nginx-deploy 删除deployment对象，不会重建
+
+### 9.10、修改资源对象
+
+kubectl edit svc/deployment/pod resourcename
+
+# 10、curl rest请求写法
+
+举例：curl -X POST -k -d "userId=admin&tenantId=22" -H "Content-Type: application/x-www-form-urlencoded" -u "admin:admin" "https://10.43.139.51:57280/manager-web/api/container/service/addContainer"
+
+1、重要参数
+
+-X/--request    [GET|POST|PUT|DELETE|…]     使用指定的HTTP method 发出指定的request
+
+-H/--header    “XX:XXX”     设定request的header
+
+-i/--include    显示response的header
+
+-d/--data    “XX=XXX”     设定HTTP parameters
+
+-v/--verbose     输出比较多的信息
+
+-u/--user     “XX:XXX”    使用者帐密
+
+-b/--cookie    cookie文件路径   使用cookie
